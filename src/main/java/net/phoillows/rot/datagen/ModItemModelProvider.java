@@ -22,6 +22,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ItemRegistry.ANOMALOCARIS_BUCKET);
         simpleItem(ItemRegistry.CARAPACE_CHESTPLATE);
         simpleItem(ItemRegistry.TIME_FLIES_MUSIC_DISC);
+        simpleItem(ItemRegistry.OPABINIA_EYEBALL);
 
         spawnEggItem(ItemRegistry.ANOMALOCARIS_SPAWN_EGG);
     }

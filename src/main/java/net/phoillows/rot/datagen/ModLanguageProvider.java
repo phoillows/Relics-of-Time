@@ -19,21 +19,22 @@ public class ModLanguageProvider extends LanguageProvider {
         addItem(ItemRegistry.CARAPACE, "Carapace");
         addItem(ItemRegistry.ANOMALOCARIS_BUCKET, "Bucket of Anomalocaris");
         addItem(ItemRegistry.CARAPACE_CHESTPLATE, "Carapace Chestplate");
+        addItem(ItemRegistry.OPABINIA_EYEBALL, "Opabinia Eyeball");
         addItem(ItemRegistry.ANOMALOCARIS_SPAWN_EGG, "Anomalocaris Spawn Egg");
 
         // Entities
         addEntityType(EntityRegistry.ANOMALOCARIS, "Anomalocaris");
 
         // Music discs
-        addMusicDisc(ItemRegistry.TIME_FLIES_MUSIC_DISC, "Music Disc", "Chips Dah Cat - Time Flies");
+        addMusicDisc(ItemRegistry.TIME_FLIES_MUSIC_DISC, "ChipsDahCat - Time Flies");
 
         // Creative tabs
         add("itemGroup.rot_items", "Relics of Time Items");
         add("itemGroup.rot_spawnEggs", "Relics of Time Spawns");
     }
 
-    private void addMusicDisc(RegistryObject<Item> item, String name, String author) {
-        addItem(item, name);
+    private void addMusicDisc(RegistryObject<Item> item, String author) {
+        addItem(item, "Music Disc");
         add("item." + RelicsOfTime.MODID + "." + item.getId().getPath() + ".desc", author);
     }
 }

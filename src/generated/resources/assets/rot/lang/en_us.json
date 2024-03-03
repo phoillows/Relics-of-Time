@@ -5,7 +5,8 @@
   "item.rot.carapace": "Carapace",
   "item.rot.carapace_chestplate": "Carapace Chestplate",
   "item.rot.music_disc_time_flies": "Music Disc",
-  "item.rot.music_disc_time_flies.desc": "Chips Dah Cat - Time Flies",
+  "item.rot.music_disc_time_flies.desc": "ChipsDahCat - Time Flies",
+  "item.rot.opabinia_eyeball": "Opabinia Eyeball",
   "itemGroup.rot_items": "Relics of Time Items",
   "itemGroup.rot_spawnEggs": "Relics of Time Spawns"
 }

@@ -21,9 +21,10 @@ public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RelicsOfTime.MODID);
 
     public static final RegistryObject<Item> CARAPACE = ITEMS.register("carapace", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> OPABINIA_EYEBALL = ITEMS.register("opabinia_eyeball", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> CARAPACE_CHESTPLATE = ITEMS.register("carapace_chestplate", () -> new CarapaceChestplateItem(new Item.Properties()));
     public static final RegistryObject<Item> ANOMALOCARIS_BUCKET = ITEMS.register("anomalocaris_bucket", () -> new MobBucketItem(EntityRegistry.ANOMALOCARIS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_FILL_FISH, new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> TIME_FLIES_MUSIC_DISC = ITEMS.register("music_disc_time_flies", () -> new RecordItem(14, SoundRegistry.TIME_FLIES_MUSIC_DISC, new Item.Properties().rarity(Rarity.RARE).stacksTo(1), 103));
+    public static final RegistryObject<Item> TIME_FLIES_MUSIC_DISC = ITEMS.register("music_disc_time_flies", () -> new RecordItem(14, SoundRegistry.TIME_FLIES_MUSIC_DISC, new Item.Properties().rarity(Rarity.RARE).stacksTo(1), 2060));
 
     public static final RegistryObject<Item> ANOMALOCARIS_SPAWN_EGG = createSpawnEgg(EntityRegistry.ANOMALOCARIS, new Color(141, 51, 51), new Color(220, 98, 71));
 

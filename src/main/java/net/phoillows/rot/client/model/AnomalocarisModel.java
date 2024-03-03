@@ -26,7 +26,7 @@ public class AnomalocarisModel extends DefaultedEntityGeoModel<Anomalocaris> {
     @Override
     public void setCustomAnimations(Anomalocaris animatable, long instanceId, AnimationState<Anomalocaris> animationState) {
         CoreGeoBone body = this.getAnimationProcessor().getBone("body");
-        if (body != null) {
+        if (body != null && animatable.isInWater()) {
             EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
             body.setRotX(entityData.headPitch() * 0.017453292F);
             body.setRotY(entityData.netHeadYaw() * 0.017453292F);

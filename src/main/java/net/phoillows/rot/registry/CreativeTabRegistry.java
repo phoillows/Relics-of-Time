@@ -17,6 +17,7 @@ public class CreativeTabRegistry {
             .displayItems((itemDisplayParameters, output) -> {
                 output.accept(ItemRegistry.CARAPACE.get());
                 output.accept(ItemRegistry.CARAPACE_CHESTPLATE.get());
+                output.accept(ItemRegistry.OPABINIA_EYEBALL.get());
                 output.accept(ItemRegistry.TIME_FLIES_MUSIC_DISC.get());
             }).build());
 

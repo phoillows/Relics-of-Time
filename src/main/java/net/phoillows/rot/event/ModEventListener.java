@@ -10,10 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.phoillows.rot.RelicsOfTime;
 import net.phoillows.rot.common.entity.Anomalocaris;
-import net.phoillows.rot.datagen.ModBlockStateProvider;
-import net.phoillows.rot.datagen.ModItemModelProvider;
-import net.phoillows.rot.datagen.ModLanguageProvider;
-import net.phoillows.rot.datagen.ModSoundProvider;
+import net.phoillows.rot.datagen.*;
+import net.phoillows.rot.datagen.tag.*;
 import net.phoillows.rot.registry.EntityRegistry;
 
 import java.util.concurrent.CompletableFuture;
@@ -26,11 +24,13 @@ public class ModEventListener {
         PackOutput packOutput = dataGenerator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ModBlockTagProvider blockTagProvider = dataGenerator.addProvider(true, new ModBlockTagProvider(packOutput, lookupProvider, existingFileHelper));
 
         dataGenerator.addProvider(true, new ModBlockStateProvider(packOutput, existingFileHelper));
         dataGenerator.addProvider(true, new ModItemModelProvider(packOutput, existingFileHelper));
         dataGenerator.addProvider(true, new ModLanguageProvider(packOutput));
         dataGenerator.addProvider(true, new ModSoundProvider(packOutput, existingFileHelper));
+        dataGenerator.addProvider(true, new ModItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter(), existingFileHelper));
     }
 
     @SubscribeEvent

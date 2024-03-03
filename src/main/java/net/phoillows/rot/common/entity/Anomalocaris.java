@@ -1,5 +1,6 @@
 package net.phoillows.rot.common.entity;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -10,6 +11,8 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
@@ -19,13 +22,15 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biomes;
@@ -42,13 +47,15 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Anomalocaris extends WaterAnimal implements GeoEntity, IWithVariant, Bucketable {
-    protected static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
-    protected static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("animation.anomalocaris.swim");
     protected static final RawAnimation CURIOUS = RawAnimation.begin().thenPlay("animation.anomalocaris.curious");
     protected static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("animation.anomalocaris.attack");
+    protected static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
+    private int eatCooldown = 0;
+    private boolean ateEyeball = false;
 
     public Anomalocaris(EntityType<? extends WaterAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -59,11 +66,12 @@ public class Anomalocaris extends WaterAnimal implements GeoEntity, IWithVariant
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1.0D, 10));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
+        this.goalSelector.addGoal(1, new TemptGoal(this, 1.2D, Ingredient.of(new ItemStack(ItemRegistry.OPABINIA_EYEBALL.get())), false));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
+        this.goalSelector.addGoal(3, new RandomSwimmingGoal(this, 1.0D, 10));
+        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractFish.class, true));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -97,7 +105,29 @@ public class Anomalocaris extends WaterAnimal implements GeoEntity, IWithVariant
 
     @Override
     protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        if (stack.is(ItemRegistry.OPABINIA_EYEBALL.get()) && this.isInWater() && this.eatCooldown <= 0) {
+            if (!pPlayer.isCreative()) {
+                stack.shrink(1);
+            }
+            this.playSound(SoundEvents.FROG_EAT);
+            this.ateEyeball = true;
+            pPlayer.addEffect(new MobEffectInstance(MobEffects.LUCK, Helper.TPS * 30));
+            Helper.spawnParticlesAroundEntity(this, ParticleTypes.HEART);
+        }
         return Bucketable.bucketMobPickup(pPlayer, pHand, this).orElse(super.mobInteract(pPlayer, pHand));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.ateEyeball) {
+            this.eatCooldown++;
+            if (this.eatCooldown > 500) {
+                this.eatCooldown = 0;
+                this.ateEyeball = false;
+            }
+        }
     }
 
     @Override
