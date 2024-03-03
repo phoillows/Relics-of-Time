@@ -6,6 +6,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.phoillows.rot.registry.CreativeTabRegistry;
+import net.phoillows.rot.registry.EntityRegistry;
+import net.phoillows.rot.registry.ItemRegistry;
+import net.phoillows.rot.registry.SoundRegistry;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -22,6 +26,10 @@ public class RelicsOfTime {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
+        CreativeTabRegistry.CREATIVE_TABS.register(modEventBus);
+        EntityRegistry.ENTITY_TYPES.register(modEventBus);
+        ItemRegistry.ITEMS.register(modEventBus);
+        SoundRegistry.SOUND_EVENTS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

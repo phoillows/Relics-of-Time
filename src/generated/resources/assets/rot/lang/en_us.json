@@ -1,0 +1,11 @@
+{
+  "entity.rot.anomalocaris": "Anomalocaris",
+  "item.rot.anomalocaris_bucket": "Bucket of Anomalocaris",
+  "item.rot.anomalocaris_spawn_egg": "Anomalocaris Spawn Egg",
+  "item.rot.carapace": "Carapace",
+  "item.rot.carapace_chestplate": "Carapace Chestplate",
+  "item.rot.music_disc_time_flies": "Music Disc",
+  "item.rot.music_disc_time_flies.desc": "Chips Dah Cat - Time Flies",
+  "itemGroup.rot_items": "Relics of Time Items",
+  "itemGroup.rot_spawnEggs": "Relics of Time Spawns"
+}
